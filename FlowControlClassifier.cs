@@ -10,20 +10,24 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace Winterdom.VisualStudio.Extensions.Text {
 
-   static class ControlFlowClassificationDefinition {
+   static class Constants {
+      public const String CLASSIF_NAME = "FlowControl";
+   }
+
+   static class FlowControlClassificationDefinition {
       [Export(typeof(ClassificationTypeDefinition))]
-      [Name("ControlFlow")]
+      [Name(Constants.CLASSIF_NAME)]
       internal static ClassificationTypeDefinition ControlFlowClassificationType = null;
    }
 
    [Export(typeof(EditorFormatDefinition))]
-   [ClassificationType(ClassificationTypeNames = "ControlFlow")]
-   [Name("Control Flow")]
+   [ClassificationType(ClassificationTypeNames = Constants.CLASSIF_NAME)]
+   [Name("Flow Control")]
    [DisplayName("C# Control Flow Keywords")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
-   sealed class ControlFlowFormat : ClassificationFormatDefinition {
-      public ControlFlowFormat() {
+   sealed class FlowControlFormat : ClassificationFormatDefinition {
+      public FlowControlFormat() {
          this.ForegroundColor = Colors.DeepSkyBlue;
          this.IsItalic = true;
       }
@@ -31,7 +35,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
 
    [Export(typeof(IClassifierProvider))]
    [ContentType("CSharp")]
-   class ControlFlowClassifierProvider : IClassifierProvider {
+   class FlowControlClassifierProvider : IClassifierProvider {
       [Import]
       private IClassificationTypeRegistryService ClassificationRegistry = null;
       [Import]
@@ -42,9 +46,9 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          if ( ignoreRequest ) return null;
          try {
             ignoreRequest = true;
-            return buffer.Properties.GetOrCreateSingletonProperty<ControlFlowClassifier>(
+            return buffer.Properties.GetOrCreateSingletonProperty<FlowControlClassifier>(
                delegate {
-                  return new ControlFlowClassifier(
+                  return new FlowControlClassifier(
                      ClassificationRegistry,
                      Aggregator.GetClassifier(buffer, context)
                   );
@@ -55,7 +59,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       }
    }
 
-   class ControlFlowClassifier : IClassifier {
+   class FlowControlClassifier : IClassifier {
       static readonly String[] KEYWORDS = {
          "if", "else", "while", "do", 
          "for", "foreach"
@@ -67,10 +71,10 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 #pragma warning restore 67
 
-      internal ControlFlowClassifier(
+      internal FlowControlClassifier(
             IClassificationTypeRegistryService registry, 
             IClassifier classifier) {
-         _classificationType = registry.GetClassificationType("ControlFlow");
+               _classificationType = registry.GetClassificationType(Constants.CLASSIF_NAME);
          _classifier = classifier;
       }
 
