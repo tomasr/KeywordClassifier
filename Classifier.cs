@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Windows.Media;
 using Microsoft.VisualStudio.ApplicationModel.Environments;
 using Microsoft.VisualStudio.Text;
@@ -16,14 +17,26 @@ namespace Winterdom.VisualStudio.Extensions.Text {
 #pragma warning disable 649 //because of the import this is not an empty reference
       [Import]
       internal IClassificationTypeRegistryService ClassificationRegistry;
+      [Import]
+      private IClassifierAggregatorService Aggregator;
 #pragma warning restore 649
+      static bool ignoreRequest = false;
 
       //returns an instance of the classifier
       public IClassifier GetClassifier(ITextBuffer buffer, IEnvironment context) {
-         return buffer.Properties.GetOrCreateSingletonProperty<ControlFlowClassifier>(
-            delegate { 
-               return new ControlFlowClassifier(ClassificationRegistry); 
-            });
+         if ( ignoreRequest ) return null;
+         try {
+            ignoreRequest = true;
+            return buffer.Properties.GetOrCreateSingletonProperty<ControlFlowClassifier>(
+               delegate {
+                  return new ControlFlowClassifier(
+                     ClassificationRegistry,
+                     Aggregator.GetClassifier(buffer, context)
+                  );
+               });
+         } finally {
+            ignoreRequest = false;
+         }
       }
    }
 
@@ -32,54 +45,37 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          "if", "else", "while", "do", 
          "for", "foreach"
       };
+
 #pragma warning disable 67
 
       public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 #pragma warning restore 67
 
       IClassificationType _classificationType;
+      IClassifier _classifier;
 
-      internal ControlFlowClassifier(IClassificationTypeRegistryService registry) {
+      internal ControlFlowClassifier(IClassificationTypeRegistryService registry, IClassifier classifier) {
          _classificationType = registry.GetClassificationType("ControlFlow");
+         _classifier = classifier;
       }
 
       public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span) {
-         List<ClassificationSpan> classifications = new List<ClassificationSpan>();
-         String text = span.GetText();
+         if ( span.IsEmpty ) return new List<ClassificationSpan>();
 
-         foreach ( String kw in KEYWORDS ) {
-            FindKeyword(text, kw, start => {
-               Span loc = new Span(span.Start.Position+start, kw.Length);
-               SnapshotSpan sspan = new SnapshotSpan(span.Snapshot, loc);
-               classifications.Add(new ClassificationSpan(sspan, _classificationType));
-            });
-         }
-         return classifications;
-      }
+         // find spans that the C# language service has already classified as keywords ...
+         var classifiedSpans = from cs in _classifier.GetClassificationSpans(span)
+                               let name = cs.ClassificationType.Classification.ToLower()
+                               where name.Contains("keyword")
+                               select cs.Span;
 
-      private void FindKeyword(String text, String keyword, Action<int> action) {
-         int lastPos = 0;
-         while ( true ) {
-            bool found = false;
-            int pos = text.IndexOf(keyword, lastPos);
-            if ( pos < 0 ) {
-               break;
-            }
-            if ( pos > 0 && IsDelimiter(text[pos - 1]) ) {
-               if ( text.Length > pos + keyword.Length + 1 ) {
-                  if ( IsDelimiter(text[pos+keyword.Length]) ) {
-                     found = true;
-                  }
-               }
-            }
-            if ( found ) {
-               action(pos);
-            }
-            lastPos = pos + 1;
-         }
-      }
-      private bool IsDelimiter(char c) {
-         return Char.IsWhiteSpace(c) || !Char.IsLetterOrDigit(c);
+         // ... and from those, ones that match our keywords
+         var controlFlowSpans = from kwSpan in classifiedSpans
+                                where KEYWORDS.Contains(kwSpan.GetText())
+                                select kwSpan;
+
+         return controlFlowSpans.Select(
+               cfs => new ClassificationSpan(cfs, _classificationType)
+            ).ToList();
       }
    }
 }
