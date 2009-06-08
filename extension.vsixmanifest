@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSIX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-   <Identifier ID="ControlFlowClassifier.Winterdom.a887584b-9f87-4354-beec-8a751e5f925a">
-      <Name>ControlFlowClassifier</Name>
+   <Identifier ID="FlowControlClassifier.Winterdom.a887584b-9f87-4354-beec-8a751e5f925a">
+      <Name>Flow Control Classifier</Name>
       <Author>Tomas Restrepo</Author>
       <Version>1.0</Version>
       <Description>Sample classifier extension for the Visual Studio Editor that hightlights C# flow control keywords using a different formatting than other keywords.</Description>
@@ -16,6 +16,6 @@
    </Identifier>
    <References />
    <Content>
-      <MEFComponent>ControlFlowClassifier.dll</MEFComponent>
+      <MEFComponent>FlowControlClassifier.dll</MEFComponent>
    </Content>
 </VSIX>

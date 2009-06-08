@@ -23,7 +23,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.CLASSIF_NAME)]
    [Name("Flow Control")]
-   [DisplayName("C# Control Flow Keywords")]
+   [DisplayName("C# Flow Control Keywords")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
    sealed class FlowControlFormat : ClassificationFormatDefinition {
@@ -37,12 +37,14 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [ContentType("CSharp")]
    class FlowControlClassifierProvider : IClassifierProvider {
       [Import]
-      private IClassificationTypeRegistryService ClassificationRegistry = null;
+      internal IClassificationTypeRegistryService ClassificationRegistry = null;
       [Import]
-      private IClassifierAggregatorService Aggregator = null;
+      internal IClassifierAggregatorService Aggregator = null;
       private static bool ignoreRequest = false;
 
       public IClassifier GetClassifier(ITextBuffer buffer, IEnvironment context) {
+         // ignoreRequest ensures that our own classifier doesn't get added when we 
+         // go through the Aggregator Service below.
          if ( ignoreRequest ) return null;
          try {
             ignoreRequest = true;
@@ -62,7 +64,8 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    class FlowControlClassifier : IClassifier {
       static readonly String[] KEYWORDS = {
          "if", "else", "while", "do", 
-         "for", "foreach"
+         "for", "foreach", "switch", 
+         "break", "continue", "return", "goto"
       };
       private IClassificationType _classificationType;
       private IClassifier _classifier;
