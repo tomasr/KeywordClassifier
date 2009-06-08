@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace Winterdom.VisualStudio.Extensions.Text {
 
    static class Constants {
-      public const String CLASSIF_NAME = "FlowControl";
+      public const String CLASSIF_NAME = "CSharpFlowControl";
    }
 
    static class FlowControlClassificationDefinition {
@@ -22,8 +22,8 @@ namespace Winterdom.VisualStudio.Extensions.Text {
 
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.CLASSIF_NAME)]
-   [Name("Flow Control")]
-   [DisplayName("C# Flow Control Keywords")]
+   [Name(Constants.CLASSIF_NAME)]
+   [DisplayName("Flow Control Keyword")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
    sealed class FlowControlFormat : ClassificationFormatDefinition {
