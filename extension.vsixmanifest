@@ -4,7 +4,7 @@
       <Name>ControlFlowClassifier</Name>
       <Author>Tomas Restrepo</Author>
       <Version>1.0</Version>
-      <Description>This is a sample classifier extension to the Visual Studio Editor that hightlights C# control flow keywords using a different formatting than other keywords.</Description>
+      <Description>Sample classifier extension for the Visual Studio Editor that hightlights C# flow control keywords using a different formatting than other keywords.</Description>
       <Locale>1033</Locale>
       <Icon>Classifier_small.png</Icon>
       <PreviewImage>Classifier_large.png</PreviewImage>
