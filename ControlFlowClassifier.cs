@@ -10,19 +10,34 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace Winterdom.VisualStudio.Extensions.Text {
 
+   static class ControlFlowClassificationDefinition {
+      [Export(typeof(ClassificationTypeDefinition))]
+      [Name("ControlFlow")]
+      internal static ClassificationTypeDefinition ControlFlowClassificationType = null;
+   }
+
+   [Export(typeof(EditorFormatDefinition))]
+   [ClassificationType(ClassificationTypeNames = "ControlFlow")]
+   [Name("Control Flow")]
+   [DisplayName("C# Control Flow Keywords")]
+   [UserVisible(true)]
+   [Order(After = Priority.High)]
+   sealed class ControlFlowFormat : ClassificationFormatDefinition {
+      public ControlFlowFormat() {
+         this.ForegroundColor = Colors.DeepSkyBlue;
+         this.IsItalic = true;
+      }
+   }
+
    [Export(typeof(IClassifierProvider))]
    [ContentType("CSharp")]
-   internal class ControlFlowClassifierProvider : IClassifierProvider {
-
-#pragma warning disable 649 //because of the import this is not an empty reference
+   class ControlFlowClassifierProvider : IClassifierProvider {
       [Import]
-      internal IClassificationTypeRegistryService ClassificationRegistry;
+      private IClassificationTypeRegistryService ClassificationRegistry = null;
       [Import]
-      private IClassifierAggregatorService Aggregator;
-#pragma warning restore 649
-      static bool ignoreRequest = false;
+      private IClassifierAggregatorService Aggregator = null;
+      private static bool ignoreRequest = false;
 
-      //returns an instance of the classifier
       public IClassifier GetClassifier(ITextBuffer buffer, IEnvironment context) {
          if ( ignoreRequest ) return null;
          try {
@@ -45,16 +60,16 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          "if", "else", "while", "do", 
          "for", "foreach"
       };
+      private IClassificationType _classificationType;
+      private IClassifier _classifier;
 
 #pragma warning disable 67
-
       public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 #pragma warning restore 67
 
-      IClassificationType _classificationType;
-      IClassifier _classifier;
-
-      internal ControlFlowClassifier(IClassificationTypeRegistryService registry, IClassifier classifier) {
+      internal ControlFlowClassifier(
+            IClassificationTypeRegistryService registry, 
+            IClassifier classifier) {
          _classificationType = registry.GetClassificationType("ControlFlow");
          _classifier = classifier;
       }
@@ -63,10 +78,11 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          if ( span.IsEmpty ) return new List<ClassificationSpan>();
 
          // find spans that the C# language service has already classified as keywords ...
-         var classifiedSpans = from cs in _classifier.GetClassificationSpans(span)
-                               let name = cs.ClassificationType.Classification.ToLower()
-                               where name.Contains("keyword")
-                               select cs.Span;
+         var classifiedSpans = 
+            from cs in _classifier.GetClassificationSpans(span)
+            let name = cs.ClassificationType.Classification.ToLower()
+            where name.Contains("keyword")
+            select cs.Span;
 
          // ... and from those, ones that match our keywords
          var controlFlowSpans = from kwSpan in classifiedSpans
