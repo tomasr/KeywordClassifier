@@ -12,6 +12,19 @@ namespace Winterdom.VisualStudio.Extensions.Text {
 
    static class Constants {
       public const String CLASSIF_NAME = "CSharpFlowControl";
+      public const String CONTENT_TYPE_CS = "CSharp";
+      public const String CONTENT_TYPE_CPP = "C/C++";
+
+      public static readonly String[] CS_KEYWORDS = {
+         "if", "else", "while", "do", 
+         "for", "foreach", "switch", 
+         "break", "continue", "return", "goto"
+      };
+      public static readonly String[] CPP_KEYWORDS = {
+         "if", "else", "while", "do", 
+         "for", "each", "switch",  
+         "break", "continue", "return", "goto"
+      };
    }
 
    static class FlowControlClassificationDefinition {
@@ -34,7 +47,8 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    }
 
    [Export(typeof(IClassifierProvider))]
-   [ContentType("CSharp")]
+   [ContentType(Constants.CONTENT_TYPE_CS)]
+   [ContentType(Constants.CONTENT_TYPE_CPP)]
    class FlowControlClassifierProvider : IClassifierProvider {
       [Import]
       internal IClassificationTypeRegistryService ClassificationRegistry = null;
@@ -62,11 +76,6 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    }
 
    class FlowControlClassifier : IClassifier {
-      static readonly String[] KEYWORDS = {
-         "if", "else", "while", "do", 
-         "for", "foreach", "switch", 
-         "break", "continue", "return", "goto"
-      };
       private IClassificationType _classificationType;
       private IClassifier _classifier;
 
@@ -84,21 +93,35 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span) {
          if ( span.IsEmpty ) return new List<ClassificationSpan>();
 
-         // find spans that the C# language service has already classified as keywords ...
+         // find spans that the language service has already classified as keywords ...
          var classifiedSpans = 
             from cs in _classifier.GetClassificationSpans(span)
             let name = cs.ClassificationType.Classification.ToLower()
             where name.Contains("keyword")
             select cs.Span;
 
+         String[] keywords = 
+            GetKeywordsByContentType(span.Snapshot.TextBuffer.ContentType);
+
          // ... and from those, ones that match our keywords
          var controlFlowSpans = from kwSpan in classifiedSpans
-                                where KEYWORDS.Contains(kwSpan.GetText())
+                                where keywords.Contains(kwSpan.GetText())
                                 select kwSpan;
 
          return controlFlowSpans.Select(
                cfs => new ClassificationSpan(cfs, _classificationType)
             ).ToList();
+      }
+
+      private string[] GetKeywordsByContentType(IContentType contentType) {
+         switch ( contentType.TypeName ) {
+         case Constants.CONTENT_TYPE_CS:
+            return Constants.CS_KEYWORDS;
+         case Constants.CONTENT_TYPE_CPP:
+            return Constants.CPP_KEYWORDS;
+         default:
+            throw new InvalidOperationException("Running into an unsupported editor");
+         }
       }
    }
 }
