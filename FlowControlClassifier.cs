@@ -16,14 +16,12 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       public const String CONTENT_TYPE_CPP = "C/C++";
 
       public static readonly String[] CS_KEYWORDS = {
-         "if", "else", "while", "do", 
-         "for", "foreach", "switch", 
-         "break", "continue", "return", "goto"
+         "if", "else", "while", "do", "for", "foreach", 
+         "switch", "break", "continue", "return", "goto", "throw" 
       };
       public static readonly String[] CPP_KEYWORDS = {
-         "if", "else", "while", "do", 
-         "for", "each", "switch",  
-         "break", "continue", "return", "goto"
+         "if", "else", "while", "do", "for", "each", "switch",
+         "break", "continue", "return", "goto", "throw"
       };
    }
 
@@ -41,7 +39,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Order(After = Priority.High)]
    sealed class FlowControlFormat : ClassificationFormatDefinition {
       public FlowControlFormat() {
-         this.ForegroundColor = Colors.DeepSkyBlue;
+         this.ForegroundColor = Colors.MediumTurquoise;
          this.IsItalic = true;
       }
    }
