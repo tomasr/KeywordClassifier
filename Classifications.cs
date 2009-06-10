@@ -41,7 +41,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Order(After = Priority.High)]
    sealed class LinqKeywordFormat : ClassificationFormatDefinition {
       public LinqKeywordFormat() {
-         this.ForegroundColor = Colors.GreenYellow;
+         this.ForegroundColor = Colors.MediumSeaGreen;
       }
    }
 }
