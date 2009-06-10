@@ -17,7 +17,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(IClassifierProvider))]
    [ContentType(CSharp.ContentType)]
    [ContentType(Cpp.ContentType)]
-   class FlowControlClassifierProvider : IClassifierProvider {
+   class KeywordClassifierProvider : IClassifierProvider {
       [Import]
       internal IClassificationTypeRegistryService ClassificationRegistry = null;
       [Import]
@@ -30,9 +30,9 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          if ( ignoreRequest ) return null;
          try {
             ignoreRequest = true;
-            return buffer.Properties.GetOrCreateSingletonProperty<FlowControlClassifier>(
+            return buffer.Properties.GetOrCreateSingletonProperty<KeywordClassifier>(
                delegate {
-                  return new FlowControlClassifier(
+                  return new KeywordClassifier(
                      ClassificationRegistry,
                      Aggregator.GetClassifier(buffer, context)
                   );
@@ -43,7 +43,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       }
    }
 
-   class FlowControlClassifier : IClassifier {
+   class KeywordClassifier : IClassifier {
       private IClassificationType keywordClassification;
       private IClassificationType linqClassification;
       private IClassifier classifier;
@@ -52,7 +52,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 #pragma warning restore 67
 
-      internal FlowControlClassifier(
+      internal KeywordClassifier(
             IClassificationTypeRegistryService registry, 
             IClassifier classifier) {
          keywordClassification = registry.GetClassificationType(Constants.CLASSIF_NAME);

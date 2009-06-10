@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Winterdom.VisualStudio.Extensions.Text</RootNamespace>
-    <AssemblyName>FlowControlClassifier</AssemblyName>
+    <AssemblyName>KeywordClassifier</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>

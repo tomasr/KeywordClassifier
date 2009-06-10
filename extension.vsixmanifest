@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSIX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-   <Identifier ID="FlowControlClassifier.Winterdom.a887584b-9f87-4354-beec-8a751e5f925a">
-      <Name>Flow Control Classifier</Name>
+   <Identifier ID="KeywordClassifier.Winterdom.a887584b-9f87-4354-beec-8a751e5f925a">
+      <Name>Keyword Classifier</Name>
       <Author>Tomas Restrepo</Author>
       <Version>1.0</Version>
-      <Description>Sample classifier extension for the Visual Studio Editor that hightlights C#/C++ flow control keywords using a different formatting than other keywords.</Description>
+      <Description>Sample classifier extension for the Visual Studio Editor that hightlights C#/C++ flow control keywords and LINQ operators using a different formatting than other keywords.</Description>
       <Locale>1033</Locale>
+      <MoreInfoURL>http://winterdom.com/</MoreInfoURL>
       <Icon>Classifier_small.png</Icon>
       <PreviewImage>Classifier_large.png</PreviewImage>
       <SupportedVSEdition version="10.0">
@@ -16,6 +17,6 @@
    </Identifier>
    <References />
    <Content>
-      <MEFComponent>FlowControlClassifier.dll</MEFComponent>
+      <MEFComponent>KeywordClassifier.dll</MEFComponent>
    </Content>
 </VSIX>
