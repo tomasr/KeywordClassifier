@@ -36,7 +36,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.LINQ_CLASSIF_NAME)]
    [Name(Constants.LINQ_CLASSIF_NAME)]
-   [DisplayName("LINQ Keyword")]
+   [DisplayName("LINQ Operators")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
    sealed class LinqKeywordFormat : ClassificationFormatDefinition {

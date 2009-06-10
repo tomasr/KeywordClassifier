@@ -11,7 +11,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
 
    static class Constants {
       public const String CLASSIF_NAME = "FlowControl";
-      public const String LINQ_CLASSIF_NAME = "LinqKeyword";
+      public const String LINQ_CLASSIF_NAME = "LinqOperator";
    }
 
    [Export(typeof(IClassifierProvider))]
