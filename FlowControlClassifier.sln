@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 10
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowControlClassifier", "FlowControlClassifier.csproj", "{2DDDD27D-0375-439E-A853-F8EDEBD9ED08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeywordClassifier", "KeywordClassifier.csproj", "{2DDDD27D-0375-439E-A853-F8EDEBD9ED08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
