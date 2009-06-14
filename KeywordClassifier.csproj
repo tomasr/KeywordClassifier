@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classifications.cs" />
-    <Compile Include="FlowControlClassifier.cs" />
+    <Compile Include="KeywordClassifier.cs" />
     <Compile Include="LanguageItems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
