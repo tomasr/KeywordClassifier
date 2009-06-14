@@ -19,11 +19,16 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       [Name(Constants.LINQ_CLASSIF_NAME)]
       internal static ClassificationTypeDefinition LinqKeywordClassificationType = null;
    }
+   static class VisibilityKeywordClassificationDefinition {
+      [Export(typeof(ClassificationTypeDefinition))]
+      [Name(Constants.VISIBILITY_CLASSIF_NAME)]
+      internal static ClassificationTypeDefinition VisibilityKeywordClassificationType = null;
+   }
 
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.CLASSIF_NAME)]
    [Name(Constants.CLASSIF_NAME)]
-   [DisplayName("Flow Control Keyword")]
+   [DisplayName("Keyword - Flow Control")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
    sealed class FlowControlFormat : ClassificationFormatDefinition {
@@ -36,12 +41,24 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.LINQ_CLASSIF_NAME)]
    [Name(Constants.LINQ_CLASSIF_NAME)]
-   [DisplayName("LINQ Operators")]
+   [DisplayName("Operator - LINQ")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
    sealed class LinqKeywordFormat : ClassificationFormatDefinition {
       public LinqKeywordFormat() {
          this.ForegroundColor = Colors.MediumSeaGreen;
+      }
+   }
+   [Export(typeof(EditorFormatDefinition))]
+   [ClassificationType(ClassificationTypeNames = Constants.VISIBILITY_CLASSIF_NAME)]
+   [Name(Constants.VISIBILITY_CLASSIF_NAME)]
+   [DisplayName("Keyword - Visibility")]
+   [UserVisible(true)]
+   [Order(After = Priority.High)]
+   sealed class VisibilityKeywordFormat : ClassificationFormatDefinition {
+      public VisibilityKeywordFormat() {
+         this.ForegroundColor = Colors.DimGray;
+         this.IsBold = true;
       }
    }
 }

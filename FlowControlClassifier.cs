@@ -12,6 +12,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    static class Constants {
       public const String CLASSIF_NAME = "FlowControl";
       public const String LINQ_CLASSIF_NAME = "LinqOperator";
+      public const String VISIBILITY_CLASSIF_NAME = "VisibilityKeyword";
    }
 
    [Export(typeof(IClassifierProvider))]
@@ -46,6 +47,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    class KeywordClassifier : IClassifier {
       private IClassificationType keywordClassification;
       private IClassificationType linqClassification;
+      private IClassificationType visClassification;
       private IClassifier classifier;
 
 #pragma warning disable 67
@@ -57,6 +59,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
             IClassifier classifier) {
          keywordClassification = registry.GetClassificationType(Constants.CLASSIF_NAME);
          linqClassification = registry.GetClassificationType(Constants.LINQ_CLASSIF_NAME);
+         visClassification = registry.GetClassificationType(Constants.VISIBILITY_CLASSIF_NAME);
          this.classifier = classifier;
       }
 
@@ -82,12 +85,19 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          list.AddRange(controlFlowSpans.Select(
                cfs => new ClassificationSpan(cfs, keywordClassification)
             ));
+
          var linqSpans = from kwSpan in classifiedSpans
                          where keywords.Linq.Contains(kwSpan.GetText())
                          select kwSpan;
-
          list.AddRange(linqSpans.Select(
                cfs => new ClassificationSpan(cfs, linqClassification)
+            ));
+
+         var visSpans = from kwSpan in classifiedSpans
+                        where keywords.Visibility.Contains(kwSpan.GetText())
+                        select kwSpan;
+         list.AddRange(visSpans.Select(
+               cfs => new ClassificationSpan(cfs, visClassification)
             ));
          return list;
       }

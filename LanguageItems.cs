@@ -7,6 +7,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    interface ILanguageKeywords {
       String[] ControlFlow { get; }
       String[] Linq { get; }
+      String[] Visibility { get; }
    }
 
    class CSharp : ILanguageKeywords {
@@ -20,11 +21,17 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          "by", "on", "equals", "into", "from", "descending",
          "ascending"
       };
+      static readonly String[] CS_VIS_KEYWORDS = {
+         "public", "private", "protected", "internal"
+      };
       public String[] ControlFlow {
          get { return CS_KEYWORDS; }
       }
       public String[] Linq {
          get { return CS_LINQ_KEYWORDS; }
+      }
+      public String[] Visibility {
+         get { return CS_VIS_KEYWORDS; }
       }
    }
    class Cpp : ILanguageKeywords {
@@ -33,11 +40,17 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          "if", "else", "while", "do", "for", "each", "switch",
          "break", "continue", "return", "goto", "throw"
       };
+      static readonly String[] CPP_VIS_KEYWORDS = {
+         "public", "private", "protected", "internal"
+      };
       public String[] ControlFlow {
          get { return CPP_KEYWORDS; }
       }
       public String[] Linq {
          get { return new String[0]; }
+      }
+      public String[] Visibility {
+         get { return CPP_VIS_KEYWORDS; }
       }
    }
 }
