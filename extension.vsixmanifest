@@ -4,7 +4,14 @@
       <Name>Keyword Classifier</Name>
       <Author>Tomas Restrepo</Author>
       <Version>1.0</Version>
-      <Description>Sample classifier extension for the Visual Studio Editor that hightlights C#/C++ flow control keywords and LINQ operators using a different formatting than other keywords.</Description>
+      <Description>
+         Sample classifier extension for the Visual Studio Editor that extends the built-in C#/C++ keyword highlighing features.
+
+         The extension provides separate control for colorization of:
+         - Flow control keywords (for, while, ,,,)
+         - Visibility keywords (public, private, ...)
+         - LINQ operators (C# only)
+      </Description>
       <Locale>1033</Locale>
       <MoreInfoURL>http://winterdom.com/</MoreInfoURL>
       <Icon>Classifier_small.png</Icon>
