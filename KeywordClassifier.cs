@@ -17,7 +17,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(IClassifierProvider))]
    [ContentType(CSharp.ContentType)]
    [ContentType(Cpp.ContentType)]
-   class KeywordClassifierProvider : IClassifierProvider {
+   public class KeywordClassifierProvider : IClassifierProvider {
       [Import]
       internal IClassificationTypeRegistryService ClassificationRegistry = null;
       [Import]
@@ -27,6 +27,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       public IClassifier GetClassifier(ITextBuffer buffer) {
          // ignoreRequest ensures that our own classifier doesn't get added when we 
          // go through the Aggregator Service below.
+         System.Diagnostics.Debug.WriteLine("IClassifierProvider.GetClassifier() called");
          if ( ignoreRequest ) return null;
          try {
             ignoreRequest = true;

@@ -9,17 +9,17 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace Winterdom.VisualStudio.Extensions.Text {
 
-   static class FlowControlClassificationDefinition {
+   public static class FlowControlClassificationDefinition {
       [Export(typeof(ClassificationTypeDefinition))]
       [Name(Constants.CLASSIF_NAME)]
       internal static ClassificationTypeDefinition FlowControlClassificationType = null;
    }
-   static class LinqKeywordClassificationDefinition {
+   public static class LinqKeywordClassificationDefinition {
       [Export(typeof(ClassificationTypeDefinition))]
       [Name(Constants.LINQ_CLASSIF_NAME)]
       internal static ClassificationTypeDefinition LinqKeywordClassificationType = null;
    }
-   static class VisibilityKeywordClassificationDefinition {
+   public static class VisibilityKeywordClassificationDefinition {
       [Export(typeof(ClassificationTypeDefinition))]
       [Name(Constants.VISIBILITY_CLASSIF_NAME)]
       internal static ClassificationTypeDefinition VisibilityKeywordClassificationType = null;
@@ -31,7 +31,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [DisplayName("Keyword - Flow Control")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
-   sealed class FlowControlFormat : ClassificationFormatDefinition {
+   public sealed class FlowControlFormat : ClassificationFormatDefinition {
       public FlowControlFormat() {
          this.ForegroundColor = Colors.MediumTurquoise;
          this.IsItalic = true;
@@ -44,7 +44,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [DisplayName("Operator - LINQ")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
-   sealed class LinqKeywordFormat : ClassificationFormatDefinition {
+   public sealed class LinqKeywordFormat : ClassificationFormatDefinition {
       public LinqKeywordFormat() {
          this.ForegroundColor = Colors.MediumSeaGreen;
       }
@@ -55,7 +55,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [DisplayName("Keyword - Visibility")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
-   sealed class VisibilityKeywordFormat : ClassificationFormatDefinition {
+   public sealed class VisibilityKeywordFormat : ClassificationFormatDefinition {
       public VisibilityKeywordFormat() {
          this.ForegroundColor = Colors.DimGray;
          this.IsBold = true;
