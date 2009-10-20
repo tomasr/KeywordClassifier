@@ -48,6 +48,9 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       private IClassificationType linqClassification;
       private IClassificationType visClassification;
       private IClassifier classifier;
+      private bool alreadyRunning;
+      private static readonly IList<ClassificationSpan> EmptyList = 
+         new List<ClassificationSpan>();
 
 #pragma warning disable 67
       public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
@@ -60,24 +63,38 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          linqClassification = registry.GetClassificationType(Constants.LINQ_CLASSIF_NAME);
          visClassification = registry.GetClassificationType(Constants.VISIBILITY_CLASSIF_NAME);
          this.classifier = classifier;
+         this.alreadyRunning = false;
       }
 
       public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span) {
+         // need this here as well because the C# signature help display will
+         // try to call us through an aggregator that already contains us
+         // so we end up calling ourselves recursively and blowing the stack!
+         if ( alreadyRunning ) return EmptyList;
+         try {
+            alreadyRunning = true;
+            return GetMyClassificationSpans(span);
+         } finally {
+            alreadyRunning = false;
+         }
+      }
+
+      private IList<ClassificationSpan> GetMyClassificationSpans(SnapshotSpan span) {
          List<ClassificationSpan> list = new List<ClassificationSpan>();
          if ( span.IsEmpty ) return list;
 
-         // find spans that the language service has already classified as keywords ...
-         var classifiedSpans = 
-            from cs in classifier.GetClassificationSpans(span)
-            let name = cs.ClassificationType.Classification.ToLower()
-            where name.Contains("keyword")
-            select cs.Span;
-
-         ILanguageKeywords keywords = 
+         ILanguageKeywords keywords =
             GetKeywordsByContentType(span.Snapshot.TextBuffer.ContentType);
          if ( keywords == null ) {
             return list;
          }
+
+         // find spans that the language service has already classified as keywords ...
+         var classifiedSpans =
+            from cs in classifier.GetClassificationSpans(span)
+            let name = cs.ClassificationType.Classification.ToLower()
+            where name.Contains("keyword")
+            select cs.Span;
 
          // ... and from those, ones that match our keywords
          var controlFlowSpans = from kwSpan in classifiedSpans
