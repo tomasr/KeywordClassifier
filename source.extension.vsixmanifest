@@ -26,6 +26,6 @@
    </Identifier>
    <References />
    <Content>
-      <VsPackage>KeywordClassifier.dll</VsPackage>
+      <MefComponent>KeywordClassifier.dll</MefComponent>
    </Content>
 </Vsix>
