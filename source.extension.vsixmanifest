@@ -1,19 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Vsix Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
+<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
    <Identifier Id="KeywordClassifier.Winterdom.a887584b-9f87-4354-beec-8a751e5f925a">
       <Name>Keyword Classifier</Name>
       <Author>Tomas Restrepo</Author>
       <Version>1.0</Version>
-      <Description>
-         Sample classifier extension for the Visual Studio Editor that extends the built-in C#/C++ keyword highlighing features.
+      <Description xml:space="preserve">Sample classifier extension for the Visual Studio Editor that extends the built-in C#/C++ keyword highlighing features.
 
-         The extension provides separate control for colorization of:
-         - Flow control keywords (for, while, ,,,)
-         - Visibility keywords (public, private, ...)
-         - LINQ operators (C# only)
-      </Description>
-      <MoreInfoUrl>http://winterdom.com/</MoreInfoUrl>
+The extension provides separate control for colorization of:
+- Flow control keywords (for, while, ,,,)
+- Visibility keywords (public, private, ...)
+- LINQ operators (C# only)      </Description>
       <Locale>1033</Locale>
+      <MoreInfoUrl>http://winterdom.com/</MoreInfoUrl>
       <Icon>Classifier_small.png</Icon>
       <PreviewImage>Classifier_large.png</PreviewImage>
       <SupportedProducts>
