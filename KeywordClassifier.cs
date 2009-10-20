@@ -105,9 +105,9 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       }
 
       private ILanguageKeywords GetKeywordsByContentType(IContentType contentType) {
-         if ( contentType.TypeName == CSharp.ContentType ) {
+         if ( contentType.IsOfType(CSharp.ContentType) ) {
             return new CSharp();
-         } else if ( contentType.TypeName == Cpp.ContentType ) {
+         } else if ( contentType.IsOfType(Cpp.ContentType) ) {
             return new Cpp();
          }
          // VS is calling us for the "CSharp Signature Help" content-type
