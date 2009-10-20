@@ -75,6 +75,9 @@ namespace Winterdom.VisualStudio.Extensions.Text {
 
          ILanguageKeywords keywords = 
             GetKeywordsByContentType(span.Snapshot.TextBuffer.ContentType);
+         if ( keywords == null ) {
+            return list;
+         }
 
          // ... and from those, ones that match our keywords
          var controlFlowSpans = from kwSpan in classifiedSpans
@@ -107,7 +110,10 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          } else if ( contentType.TypeName == Cpp.ContentType ) {
             return new Cpp();
          }
-         throw new InvalidOperationException("Running into an unsupported editor");
+         // VS is calling us for the "CSharp Signature Help" content-type
+         // which we didn't ask for. Argh!!!
+         // throw new InvalidOperationException("Running into an unsupported editor");
+         return null;
       }
    }
 }
