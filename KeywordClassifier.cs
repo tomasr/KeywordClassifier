@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using Microsoft.VisualStudio.ApplicationModel.Environments;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
@@ -25,7 +24,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       internal IClassifierAggregatorService Aggregator = null;
       private static bool ignoreRequest = false;
 
-      public IClassifier GetClassifier(ITextBuffer buffer, IEnvironment context) {
+      public IClassifier GetClassifier(ITextBuffer buffer) {
          // ignoreRequest ensures that our own classifier doesn't get added when we 
          // go through the Aggregator Service below.
          if ( ignoreRequest ) return null;
@@ -35,7 +34,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
                delegate {
                   return new KeywordClassifier(
                      ClassificationRegistry,
-                     Aggregator.GetClassifier(buffer, context)
+                     Aggregator.GetClassifier(buffer)
                   );
                });
          } finally {
