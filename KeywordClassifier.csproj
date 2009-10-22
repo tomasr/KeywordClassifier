@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classifications.cs" />
-    <Compile Include="KeywordClassifier.cs" />
+    <Compile Include="KeywordTagger.cs" />
     <Compile Include="LanguageItems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
