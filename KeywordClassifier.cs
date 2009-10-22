@@ -4,6 +4,8 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 
 namespace Winterdom.VisualStudio.Extensions.Text {
@@ -14,111 +16,85 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       public const String VISIBILITY_CLASSIF_NAME = "VisibilityKeyword";
    }
 
-   [Export(typeof(IClassifierProvider))]
+   [Export(typeof(IViewTaggerProvider))]
    [ContentType(CSharp.ContentType)]
    [ContentType(Cpp.ContentType)]
-   public class KeywordClassifierProvider : IClassifierProvider {
+   [TagType(typeof(ClassificationTag))]
+   public class KeywordTaggerProvider : IViewTaggerProvider {
       [Import]
       internal IClassificationTypeRegistryService ClassificationRegistry = null;
       [Import]
-      internal IClassifierAggregatorService Aggregator = null;
-      private static bool ignoreRequest = false;
+      internal IBufferTagAggregatorFactoryService Aggregator = null;
 
-      public IClassifier GetClassifier(ITextBuffer buffer) {
-         // ignoreRequest ensures that our own classifier doesn't get added when we 
-         // go through the Aggregator Service below.
-         if ( ignoreRequest ) return null;
-         try {
-            ignoreRequest = true;
-            return buffer.Properties.GetOrCreateSingletonProperty<KeywordClassifier>(
-               delegate {
-                  return new KeywordClassifier(
-                     ClassificationRegistry,
-                     Aggregator.GetClassifier(buffer)
-                  );
-               });
-         } finally {
-            ignoreRequest = false;
+      public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag {
+         if ( typeof(T) == typeof(ClassificationTag) ) {
+            return new KeywordTagger(
+               ClassificationRegistry,
+               Aggregator.CreateTagAggregator<ClassificationTag>(buffer)
+            ) as ITagger<T>;
          }
+         return null;
       }
    }
 
-   class KeywordClassifier : IClassifier {
-      private IClassificationType keywordClassification;
-      private IClassificationType linqClassification;
-      private IClassificationType visClassification;
-      private IClassifier classifier;
-      private bool alreadyRunning;
+   class KeywordTagger : ITagger<ClassificationTag> {
+      private ClassificationTag keywordClassification;
+      private ClassificationTag linqClassification;
+      private ClassificationTag visClassification;
+      private ITagAggregator<ClassificationTag> aggregator;
       private static readonly IList<ClassificationSpan> EmptyList = 
          new List<ClassificationSpan>();
 
 #pragma warning disable 67
-      public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
+      public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
 #pragma warning restore 67
 
-      internal KeywordClassifier(
+      internal KeywordTagger(
             IClassificationTypeRegistryService registry, 
-            IClassifier classifier) {
-         keywordClassification = registry.GetClassificationType(Constants.CLASSIF_NAME);
-         linqClassification = registry.GetClassificationType(Constants.LINQ_CLASSIF_NAME);
-         visClassification = registry.GetClassificationType(Constants.VISIBILITY_CLASSIF_NAME);
-         this.classifier = classifier;
-         this.alreadyRunning = false;
+            ITagAggregator<ClassificationTag> aggregator) {
+         keywordClassification = 
+            new ClassificationTag(registry.GetClassificationType(Constants.CLASSIF_NAME));
+         linqClassification = 
+            new ClassificationTag(registry.GetClassificationType(Constants.LINQ_CLASSIF_NAME));
+         visClassification = 
+            new ClassificationTag(registry.GetClassificationType(Constants.VISIBILITY_CLASSIF_NAME));
+         this.aggregator = aggregator;
       }
 
-      public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span) {
-         // need this here as well because the C# signature help display will
-         // try to call us through an aggregator that already contains us
-         // so we end up calling ourselves recursively and blowing the stack!
-         if ( alreadyRunning ) return EmptyList;
-         try {
-            alreadyRunning = true;
-            return GetMyClassificationSpans(span);
-         } finally {
-            alreadyRunning = false;
+      public IEnumerable<ITagSpan<ClassificationTag>> GetTags(NormalizedSnapshotSpanCollection spans) {
+         if ( spans.Count == 0 ) {
+            yield break;
          }
-      }
-
-      private IList<ClassificationSpan> GetMyClassificationSpans(SnapshotSpan span) {
-         List<ClassificationSpan> list = new List<ClassificationSpan>();
-         if ( span.IsEmpty ) return list;
-
+         ITextSnapshot snapshot = spans[0].Snapshot;
          ILanguageKeywords keywords =
-            GetKeywordsByContentType(span.Snapshot.TextBuffer.ContentType);
+            GetKeywordsByContentType(snapshot.TextBuffer.ContentType);
          if ( keywords == null ) {
-            return list;
+            yield break;
          }
 
          // find spans that the language service has already classified as keywords ...
-         var classifiedSpans =
-            from cs in classifier.GetClassificationSpans(span)
-            let name = cs.ClassificationType.Classification.ToLower()
+         var mappedSpans =
+            from tagSpan in aggregator.GetTags(spans)
+            let name = tagSpan.Tag.ClassificationType.Classification.ToLower()
             where name.Contains("keyword")
-            select cs.Span;
+            select tagSpan.Span;
+         var classifiedSpans =
+            from mappedSpan in mappedSpans
+            let cs = mappedSpan.GetSpans(snapshot)
+            where cs.Count > 0
+            select cs[0];
 
          // ... and from those, ones that match our keywords
-         var controlFlowSpans = from kwSpan in classifiedSpans
-                                where keywords.ControlFlow.Contains(kwSpan.GetText())
-                                select kwSpan;
-
-         list.AddRange(controlFlowSpans.Select(
-               cfs => new ClassificationSpan(cfs, keywordClassification)
-            ));
-
-         var linqSpans = from kwSpan in classifiedSpans
-                         where keywords.Linq.Contains(kwSpan.GetText())
-                         select kwSpan;
-         list.AddRange(linqSpans.Select(
-               cfs => new ClassificationSpan(cfs, linqClassification)
-            ));
-
-         var visSpans = from kwSpan in classifiedSpans
-                        where keywords.Visibility.Contains(kwSpan.GetText())
-                        select kwSpan;
-         list.AddRange(visSpans.Select(
-               cfs => new ClassificationSpan(cfs, visClassification)
-            ));
-         return list;
+         foreach ( var cs in classifiedSpans ) {
+            String text = cs.GetText();
+            if ( keywords.ControlFlow.Contains(text) ) {
+               yield return new TagSpan<ClassificationTag>(cs, keywordClassification);
+            } else if ( keywords.Visibility.Contains(text) ) {
+               yield return new TagSpan<ClassificationTag>(cs, visClassification);
+            } else if ( keywords.Linq.Contains(text) ) {
+               yield return new TagSpan<ClassificationTag>(cs, linqClassification);
+            }
+         }
       }
 
       private ILanguageKeywords GetKeywordsByContentType(IContentType contentType) {
