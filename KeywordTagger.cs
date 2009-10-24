@@ -27,13 +27,10 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       internal IBufferTagAggregatorFactoryService Aggregator = null;
 
       public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag {
-         if ( typeof(T) == typeof(ClassificationTag) ) {
-            return new KeywordTagger(
-               ClassificationRegistry,
-               Aggregator.CreateTagAggregator<ClassificationTag>(buffer)
-            ) as ITagger<T>;
-         }
-         return null;
+         return new KeywordTagger(
+            ClassificationRegistry,
+            Aggregator.CreateTagAggregator<ClassificationTag>(buffer)
+         ) as ITagger<T>;
       }
    }
 
