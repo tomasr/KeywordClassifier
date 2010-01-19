@@ -11,9 +11,9 @@ using Microsoft.VisualStudio.Utilities;
 namespace Winterdom.VisualStudio.Extensions.Text {
 
    static class Constants {
-      public const String CLASSIF_NAME = "FlowControl";
-      public const String LINQ_CLASSIF_NAME = "LinqOperator";
-      public const String VISIBILITY_CLASSIF_NAME = "VisibilityKeyword";
+      public const String CLASSIF_NAME = "Keyword - Flow Control";
+      public const String LINQ_CLASSIF_NAME = "Operator - LINQ";
+      public const String VISIBILITY_CLASSIF_NAME = "Keyword - Visibility";
    }
 
    [Export(typeof(IViewTaggerProvider))]

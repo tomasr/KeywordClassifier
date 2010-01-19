@@ -28,7 +28,6 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.CLASSIF_NAME)]
    [Name(Constants.CLASSIF_NAME)]
-   [DisplayName("Keyword - Flow Control")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
    public sealed class FlowControlFormat : ClassificationFormatDefinition {
@@ -41,7 +40,6 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.LINQ_CLASSIF_NAME)]
    [Name(Constants.LINQ_CLASSIF_NAME)]
-   [DisplayName("Operator - LINQ")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
    public sealed class LinqKeywordFormat : ClassificationFormatDefinition {
@@ -52,7 +50,6 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.VISIBILITY_CLASSIF_NAME)]
    [Name(Constants.VISIBILITY_CLASSIF_NAME)]
-   [DisplayName("Keyword - Visibility")]
    [UserVisible(true)]
    [Order(After = Priority.High)]
    public sealed class VisibilityKeywordFormat : ClassificationFormatDefinition {
