@@ -7,9 +7,9 @@
       <Description xml:space="preserve">Sample classifier extension for the Visual Studio Editor that extends the built-in C#/C++ keyword highlighing features.
 
 The extension provides separate control for colorization of:
-- Flow control keywords (for, while, ,,,)
+- Flow control keywords (for, while, ...)
 - Visibility keywords (public, private, ...)
-- LINQ operators (C# only)      </Description>
+- LINQ operators (C# only)</Description>
       <Locale>1033</Locale>
       <MoreInfoUrl>http://winterdom.com/</MoreInfoUrl>
       <Icon>Classifier_small.png</Icon>
