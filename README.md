@@ -30,3 +30,18 @@ Keywords that are customized include:
    click on the KeywordClassifier.vsix generated.
 
 That's it!
+
+## Customization
+
+It is now possible to customize which keywords get highlighted for each of the 3
+categories the extension supports for each supported language:
+
+1. Create a new registry key in HKEY_CURRENT_USER:
+   Software\Winterdom\VS Extensions\KeywordClassifier
+2. Create a new string value under this key for each language/category you want
+   to customize. Possible languages are CSharp and Cpp. Possible categories are
+   ControlFlow, Linq and Visibility.
+   So, for example, to change which Linq keywords
+   get highlighted for C#, just create a value named CSharp_Linq and set it to a
+   comma-separated list of keywords.
+

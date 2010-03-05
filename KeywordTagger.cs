@@ -63,7 +63,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
             yield break;
          }
          ITextSnapshot snapshot = spans[0].Snapshot;
-         ILanguageKeywords keywords =
+         LanguageKeywords keywords =
             GetKeywordsByContentType(snapshot.TextBuffer.ContentType);
          if ( keywords == null ) {
             yield break;
@@ -94,7 +94,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          }
       }
 
-      private ILanguageKeywords GetKeywordsByContentType(IContentType contentType) {
+      private LanguageKeywords GetKeywordsByContentType(IContentType contentType) {
          if ( contentType.IsOfType(CSharp.ContentType) ) {
             return new CSharp();
          } else if ( contentType.IsOfType(Cpp.ContentType) ) {
