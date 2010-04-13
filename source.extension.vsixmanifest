@@ -1,29 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-   <Identifier Id="KeywordClassifier.Winterdom.a887584b-9f87-4354-beec-8a751e5f925a">
-      <Name>Keyword Classifier</Name>
-      <Author>Tomas Restrepo</Author>
-      <Version>1.1</Version>
-      <Description xml:space="preserve">Sample classifier extension for the Visual Studio Editor that extends the built-in C#/C++ keyword highlighing features.
-
-The extension provides separate control for colorization of:
-- Flow control keywords (for, while, ...)
-- Visibility keywords (public, private, ...)
-- LINQ operators (C# only)</Description>
-      <Locale>1033</Locale>
-      <MoreInfoUrl>http://winterdom.com/</MoreInfoUrl>
-      <Icon>Classifier_small.png</Icon>
-      <PreviewImage>Classifier_large.png</PreviewImage>
-      <SupportedProducts>
-         <VisualStudio Version="10.0">
-            <Edition>VST_All</Edition>
-            <Edition>Pro</Edition>
-         </VisualStudio>
-      </SupportedProducts>
-      <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
-   </Identifier>
-   <References />
-   <Content>
-      <MefComponent>KeywordClassifier.dll</MefComponent>
-   </Content>
+  <Identifier Id="KeywordClassifier.Winterdom.a887584b-9f87-4354-beec-8a751e5f925a">
+    <Name>Keyword Classifier</Name>
+    <Author>Tomas Restrepo</Author>
+    <Version>1.1</Version>
+    <Description xml:space="preserve">Extension for the Visual Studio Editor that extends the built-in C#/C++ keyword highlighing features around visibility, flow control and LINQ.</Description>
+    <Locale>1033</Locale>
+    <MoreInfoUrl>http://winterdom.com/</MoreInfoUrl>
+    <Icon>Classifier_small.png</Icon>
+    <PreviewImage>Classifier_large.png</PreviewImage>
+    <SupportedProducts>
+      <VisualStudio Version="10.0">
+        <Edition>Ultimate</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Pro</Edition>
+        <Edition>IntegratedShell</Edition>
+        <Edition>VST_All</Edition>
+      </VisualStudio>
+    </SupportedProducts>
+    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+  </Identifier>
+  <References />
+  <Content>
+    <MefComponent>KeywordClassifier.dll</MefComponent>
+  </Content>
 </Vsix>
