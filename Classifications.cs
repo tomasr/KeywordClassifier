@@ -32,6 +32,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Order(After = Priority.High)]
    public sealed class FlowControlFormat : ClassificationFormatDefinition {
       public FlowControlFormat() {
+         this.DisplayName = Constants.CLASSIF_NAME;
          this.ForegroundColor = Colors.MediumTurquoise;
          this.IsItalic = true;
       }
@@ -44,6 +45,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Order(After = Priority.High)]
    public sealed class LinqKeywordFormat : ClassificationFormatDefinition {
       public LinqKeywordFormat() {
+         this.DisplayName = Constants.LINQ_CLASSIF_NAME;
          this.ForegroundColor = Colors.MediumSeaGreen;
       }
    }
@@ -54,6 +56,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Order(After = Priority.High)]
    public sealed class VisibilityKeywordFormat : ClassificationFormatDefinition {
       public VisibilityKeywordFormat() {
+         this.DisplayName = Constants.VISIBILITY_CLASSIF_NAME;
          this.ForegroundColor = Colors.DimGray;
          this.IsBold = true;
       }

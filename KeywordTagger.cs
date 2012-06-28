@@ -29,7 +29,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag {
          return new KeywordTagger(
             ClassificationRegistry,
-            Aggregator.CreateTagAggregator<ClassificationTag>(buffer)
+            Aggregator.CreateTagAggregator<IClassificationTag>(buffer)
          ) as ITagger<T>;
       }
    }
@@ -38,7 +38,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       private ClassificationTag keywordClassification;
       private ClassificationTag linqClassification;
       private ClassificationTag visClassification;
-      private ITagAggregator<ClassificationTag> aggregator;
+      private ITagAggregator<IClassificationTag> aggregator;
       private static readonly IList<ClassificationSpan> EmptyList = 
          new List<ClassificationSpan>();
 
@@ -48,7 +48,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
 
       internal KeywordTagger(
             IClassificationTypeRegistryService registry, 
-            ITagAggregator<ClassificationTag> aggregator) {
+            ITagAggregator<IClassificationTag> aggregator) {
          keywordClassification = 
             new ClassificationTag(registry.GetClassificationType(Constants.CLASSIF_NAME));
          linqClassification = 
