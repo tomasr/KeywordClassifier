@@ -3,7 +3,7 @@
   <Identifier Id="KeywordClassifier.Winterdom.a887584b-9f87-4354-beec-8a751e5f925a">
     <Name>Keyword Classifier</Name>
     <Author>Tomas Restrepo</Author>
-    <Version>1.1</Version>
+    <Version>1.2</Version>
     <Description xml:space="preserve">Extension for the Visual Studio Editor that extends the built-in C#/C++ keyword highlighing features around visibility, flow control and LINQ.</Description>
     <Locale>1033</Locale>
     <MoreInfoUrl>http://winterdom.com/</MoreInfoUrl>
