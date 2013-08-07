@@ -19,6 +19,8 @@ namespace Winterdom.VisualStudio.Extensions.Text {
    [Export(typeof(IViewTaggerProvider))]
    [ContentType(CSharp.ContentType)]
    [ContentType(Cpp.ContentType)]
+   [ContentType(JScript.ContentType)]
+   [ContentType(JScript.ContentTypeVS2012)]
    [TagType(typeof(ClassificationTag))]
    public class KeywordTaggerProvider : IViewTaggerProvider {
       [Import]
@@ -95,10 +97,13 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       }
 
       private LanguageKeywords GetKeywordsByContentType(IContentType contentType) {
-         if ( contentType.IsOfType(CSharp.ContentType) ) {
+         if (contentType.IsOfType(CSharp.ContentType)) {
             return new CSharp();
          } else if ( contentType.IsOfType(Cpp.ContentType) ) {
             return new Cpp();
+         } else if ( contentType.IsOfType(JScript.ContentType) 
+                  || contentType.IsOfType(JScript.ContentTypeVS2012) ) {
+            return new JScript();
          }
          // VS is calling us for the "CSharp Signature Help" content-type
          // which we didn't ask for. Argh!!!
