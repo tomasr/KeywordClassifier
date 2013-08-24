@@ -14,6 +14,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       public const String CLASSIF_NAME = "Keyword - Flow Control";
       public const String LINQ_CLASSIF_NAME = "Operator - LINQ";
       public const String VISIBILITY_CLASSIF_NAME = "Keyword - Visibility";
+      public const String STRING_ESCAPE_CLASSIF_NAME = "String Escape Sequence";
    }
 
    [Export(typeof(IViewTaggerProvider))]
@@ -40,6 +41,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       private ClassificationTag keywordClassification;
       private ClassificationTag linqClassification;
       private ClassificationTag visClassification;
+      private ClassificationTag stringEscapeClassification;
       private ITagAggregator<IClassificationTag> aggregator;
       private static readonly IList<ClassificationSpan> EmptyList = 
          new List<ClassificationSpan>();
@@ -57,6 +59,8 @@ namespace Winterdom.VisualStudio.Extensions.Text {
             new ClassificationTag(registry.GetClassificationType(Constants.LINQ_CLASSIF_NAME));
          visClassification = 
             new ClassificationTag(registry.GetClassificationType(Constants.VISIBILITY_CLASSIF_NAME));
+         stringEscapeClassification = 
+            new ClassificationTag(registry.GetClassificationType(Constants.STRING_ESCAPE_CLASSIF_NAME));
          this.aggregator = aggregator;
       }
 
@@ -64,6 +68,15 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          if ( spans.Count == 0 ) {
             yield break;
          }
+         foreach (var tagSpan in LookForStringEscapeSequences(spans)) {
+             yield return tagSpan;
+         }
+         foreach (var tagSpan in LookForKeywords(spans)) {
+             yield return tagSpan;
+         }
+      }
+
+      private IEnumerable<ITagSpan<ClassificationTag>> LookForKeywords(NormalizedSnapshotSpanCollection spans) {
          ITextSnapshot snapshot = spans[0].Snapshot;
          LanguageKeywords keywords =
             GetKeywordsByContentType(snapshot.TextBuffer.ContentType);
@@ -72,16 +85,7 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          }
 
          // find spans that the language service has already classified as keywords ...
-         var mappedSpans =
-            from tagSpan in aggregator.GetTags(spans)
-            let name = tagSpan.Tag.ClassificationType.Classification.ToLower()
-            where name.Contains("keyword")
-            select tagSpan.Span;
-         var classifiedSpans =
-            from mappedSpan in mappedSpans
-            let cs = mappedSpan.GetSpans(snapshot)
-            where cs.Count > 0
-            select cs[0];
+         var classifiedSpans = GetClassifiedSpans(spans, "keyword");
 
          // ... and from those, ones that match our keywords
          foreach ( var cs in classifiedSpans ) {
@@ -94,6 +98,40 @@ namespace Winterdom.VisualStudio.Extensions.Text {
                yield return new TagSpan<ClassificationTag>(cs, linqClassification);
             }
          }
+      }
+      private IEnumerable<ITagSpan<ClassificationTag>> LookForStringEscapeSequences(NormalizedSnapshotSpanCollection spans) {
+         ITextSnapshot snapshot = spans[0].Snapshot;
+         var classifiedSpans = GetClassifiedSpans(spans, "string");
+
+         foreach (var cs in classifiedSpans) {
+            String text = cs.GetText();
+            // don't process verbatim strings
+            if ( text.StartsWith("@") ) continue;
+            int start = 1;
+            while ( start < text.Length-2 ) {
+               if ( text[start] == '\\' ) {
+                  var sspan = new SnapshotSpan(snapshot, cs.Start.Position+start, 2);
+                  yield return new TagSpan<ClassificationTag>(sspan, stringEscapeClassification);
+                  start++;
+               }
+               start++;
+            }
+         }
+      }
+
+      private IEnumerable<SnapshotSpan> GetClassifiedSpans(NormalizedSnapshotSpanCollection spans, String tagName) {
+         ITextSnapshot snapshot = spans[0].Snapshot;
+         var mappedSpans =
+            from tagSpan in aggregator.GetTags(spans)
+            let name = tagSpan.Tag.ClassificationType.Classification.ToLower()
+            where name.Contains(tagName)
+            select tagSpan.Span;
+         var classifiedSpans =
+            from mappedSpan in mappedSpans
+            let cs = mappedSpan.GetSpans(snapshot)
+            where cs.Count > 0
+            select cs[0];
+         return classifiedSpans;
       }
 
       private LanguageKeywords GetKeywordsByContentType(IContentType contentType) {

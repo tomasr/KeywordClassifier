@@ -24,6 +24,11 @@ namespace Winterdom.VisualStudio.Extensions.Text {
       [Name(Constants.VISIBILITY_CLASSIF_NAME)]
       internal static ClassificationTypeDefinition VisibilityKeywordClassificationType = null;
    }
+   public static class StringEscapeSequenceClassificationDefinition {
+      [Export(typeof(ClassificationTypeDefinition))]
+      [Name(Constants.STRING_ESCAPE_CLASSIF_NAME)]
+      internal static ClassificationTypeDefinition StringEscapeSequenceClassificationType = null;
+   }
 
    [Export(typeof(EditorFormatDefinition))]
    [ClassificationType(ClassificationTypeNames = Constants.CLASSIF_NAME)]
@@ -59,6 +64,18 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          this.DisplayName = Constants.VISIBILITY_CLASSIF_NAME;
          this.ForegroundColor = Colors.DimGray;
          this.IsBold = true;
+      }
+   }
+
+   [Export(typeof(EditorFormatDefinition))]
+   [ClassificationType(ClassificationTypeNames = Constants.STRING_ESCAPE_CLASSIF_NAME)]
+   [Name(Constants.STRING_ESCAPE_CLASSIF_NAME)]
+   [UserVisible(true)]
+   [Order(After = Priority.High)]
+   public sealed class StringEscapeSequenceFormat : ClassificationFormatDefinition {
+      public StringEscapeSequenceFormat() {
+         this.DisplayName = Constants.STRING_ESCAPE_CLASSIF_NAME;
+         this.ForegroundColor = Colors.DimGray;
       }
    }
 }
