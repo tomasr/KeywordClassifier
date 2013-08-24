@@ -103,20 +103,37 @@ namespace Winterdom.VisualStudio.Extensions.Text {
          ITextSnapshot snapshot = spans[0].Snapshot;
          var classifiedSpans = GetClassifiedSpans(spans, "string");
 
-         foreach (var cs in classifiedSpans) {
+         foreach ( var cs in classifiedSpans ) {
             String text = cs.GetText();
             // don't process verbatim strings
             if ( text.StartsWith("@") ) continue;
             int start = 1;
             while ( start < text.Length-2 ) {
                if ( text[start] == '\\' ) {
-                  var sspan = new SnapshotSpan(snapshot, cs.Start.Position+start, 2);
+                  int len = 1;
+                  int maxlen = Int32.MaxValue;
+                  char f = text[start + 1];
+                  // not perfect, but close enough for first version
+                  if ( f == 'x' || f == 'X' || f == 'u' || f == 'U' ) {
+                     while ( (start+len) < text.Length && IsHexDigit(text[start+len+1]) ) {
+                        len++;
+                     }
+                  }
+                  if ( f == 'u' ) maxlen = 4;
+                  if ( f == 'U' ) maxlen = 8;
+                  if ( len > maxlen ) len = maxlen;
+                  var sspan = new SnapshotSpan(snapshot, cs.Start.Position+start, len+1);
                   yield return new TagSpan<ClassificationTag>(sspan, stringEscapeClassification);
-                  start++;
+                  start += len;
                }
                start++;
             }
          }
+      }
+
+      private bool IsHexDigit(char c) {
+         if ( Char.IsDigit(c) ) return true;
+         return (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
       }
 
       private IEnumerable<SnapshotSpan> GetClassifiedSpans(NormalizedSnapshotSpanCollection spans, String tagName) {
