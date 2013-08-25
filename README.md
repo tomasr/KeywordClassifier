@@ -1,16 +1,17 @@
-# KeywordClassifier VS2010 Extension
+# KeywordClassifier Visual Studio Extension
 
-This is a sample extension for Visual Studio 2010 that shows how to 
-to customize the syntax highlighting used for certain keywords.
+This is a sample extension for Visual Studio that shows how to 
+to customize the syntax highlighting. The current version supports
+VS2010, VS2012 and the VS2013 preview.
 
 The extension was originally built as a custom Clasiffier component,
 but later changed to a custom Tagger component after beta 2 was released,
 because it offered better performance.
 
-The extension supports C# and C/C++, but support for other languages
+The extension supports C#, C/C++, and JavaScript, but support for other languages
 can be added easily. Each type of keyword highlighted can also be 
 customized through new classifications in the Fonts and Colors section
-of the Visual Studio 2010 Options dialog.
+of the Visual Studio Options dialog.
 
 Keywords that are customized include:
 
@@ -20,7 +21,15 @@ Keywords that are customized include:
 
 ![Extension sample](http://winterdom.com/wp-content/uploads/2009/06/vs10_kc_1_thumb.png)
 
-## Installation
+Starting with version 1.4, syntax highlighting of escape sequences in strings is also 
+supported, through the "String Escape Sequence" classification:
+
+![Extension sample](http://winterdom.com/images/kc_string_escape.png)
+
+The extension is posted on the Visual Studio Gallery at 
+http://visualstudiogallery.msdn.microsoft.com/862fbd13-4a20-44db-b94c-5854e2672b0d
+
+## Build and Installation
 
 1. Install the Visual Studio 2010 SDK. You'll need it for building custom
    extensions.
